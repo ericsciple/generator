@@ -1,0 +1,23 @@
+
+name: Actions Deploy
+on:
+  workflow_dispatch:
+    inputs:
+      min-ring:
+        description: Minimum ring filter
+        default: 0
+      max-ring:
+        description: Maximum ring filter
+        default: 3
+      scale-unit:
+        description: Scale unit filter
+        default: ''
+      build:
+        description: Build number
+        required: true
+jobs:
+  generator:
+    runs-on: [ self-hosted ]
+    generates: graph.yml
+    steps:
+      - run: ./script/generate-graph.js > the-plan.yml
