@@ -22,4 +22,5 @@ jobs:
     generates: graph.yml
     steps:
       - uses: actions/checkout@v2
-      - run: ./script/generate-graph.js artifactCache $GITHUB_EVENT_PATH | yq eval --prettyPrint > graph.yml
+      - name: Generate graph
+        run: ./script/generate-graph.js artifactCache $GITHUB_EVENT_PATH | yq eval --prettyPrint > graph.yml
