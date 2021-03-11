@@ -22,7 +22,7 @@ async function run() {
     }
 
     // Load inputs
-    const inputs = JSON.parse(await fs.promises.readFile(path.join(process.cwd(), eventPath))).inputs
+    const inputs = JSON.parse(await fs.promises.readFile(eventPath)).inputs
     let minRing = Number(inputs.minRing)
     if (isNaN(minRing) || !rings[minRing]) {
         throw new Error(`Invalid min ring '${minRing}'`)
