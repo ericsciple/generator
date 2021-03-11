@@ -46,9 +46,6 @@
         ]  
     },
     "artifactCache": {
-        "test": [
-            "apl2"
-        ],
         "0": [
             "eus-0"
         ],

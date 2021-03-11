@@ -1,0 +1,25 @@
+
+name: Artifact Cache Deploy
+on:
+  workflow_dispatch:
+    inputs:
+      min-ring:
+        description: Minimum ring filter
+        default: 0
+      max-ring:
+        description: Maximum ring filter
+        default: 2
+      scale-unit:
+        description: Scale unit filter
+        default: ''
+      build:
+        description: Build number
+        required: true
+jobs:
+  generator:
+    name: "Generate graph"
+    runs-on: [ self-hosted ]
+    generates: graph.yml
+    steps:
+      - uses: actions/checkout@v2
+      - run: ./script/generate-graph.js artifactCache $GITHUB_EVENT_PATH | yq eval --prettyPrint > graph.yml
