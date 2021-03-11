@@ -23,18 +23,18 @@ async function run() {
 
     // Load inputs
     const inputs = JSON.parse(await fs.promises.readFile(eventPath)).inputs
-    let minRing = Number(inputs.minRing)
+    let minRing = Number(inputs['min-ring'])
     if (isNaN(minRing) || !rings[minRing]) {
         throw new Error(`Invalid min ring '${minRing}'`)
     }
-    let maxRing = Number(inputs.maxRing)
+    let maxRing = Number(inputs['max-ring'])
     if (isNaN(maxRing) || !rings[maxRing]) {
         throw new Error(`Invalid max ring '${maxRing}'`)
     }
     else if (maxRing < minRing) {
         throw new Error(`Max ring must be greater or equal to min ring`)
     }
-    const scaleUnitFilter = inputs.scaleUnit
+    const scaleUnitFilter = inputs['scale-unit']
     if (scaleUnitFilter) {
         let found = false
         for (const ringNumber of Object.keys(rings)) {
