@@ -74,7 +74,7 @@ async function run() {
 
             // Deploy job
             graph.jobs[`deploy-${scaleUnit}`] = {
-                "name": `Deploy ring ${ringNumber}, ${scaleUnit}`,
+                "name": `Ring ${ringNumber}, ${scaleUnit} deploy`,
                 "needs": getDeployNeeds(ringNumber, rings, minRing),
                 "runs-on": "self-hosted",
                 "env": {
@@ -105,7 +105,7 @@ async function run() {
 
             // Health job
             graph.jobs[`health-${scaleUnit}`] = {
-                "name": `Health ring ${ringNumber}, ${scaleUnit}`,
+                "name": `Ring ${ringNumber}, ${scaleUnit} health`,
                 "needs": `deploy-${scaleUnit}`,
                 "runs-on": "self-hosted",
                 "env": {
@@ -129,7 +129,7 @@ async function run() {
             // Canary tests
             if (ringNumber === 0) {
                 graph.jobs["canary"] = {
-                    "name": `Canary`,
+                    "name": `Ring 0 canary`,
                     "needs": `deploy-${scaleUnit}`,
                     "runs-on": "self-hosted",
                     "env": {
