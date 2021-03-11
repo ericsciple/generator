@@ -1,0 +1,127 @@
+{
+    "actions": {
+        "0": [
+            "eus2-0"
+        ],
+        "1": [
+            "eus-1"
+        ],
+        "2": [
+            "eus-2",
+            "eus-3",
+            "eus2-1"
+        ],
+        "3": [
+            "eus2-2",
+            "eus2-3",
+            "eus2-4"
+        ]
+    },
+    "mps": {
+        "0": [
+            "ppe-cus-1"
+        ],
+        "1": [
+            "ppe-eus2-1"
+        ],
+        "2": [
+            "cus-1"
+        ],
+        "3": [
+            "eus2-1"
+        ]  
+    },
+    "token": {
+        "0": [
+            "ppe-cus-1"
+        ],
+        "1": [
+            "ppe-eus2-1"
+        ],
+        "2": [
+            "cus-2"
+        ],
+        "3": [
+            "eus2-1"
+        ]  
+    },
+    "artifactCache": {
+        "test": [
+            "apl2"
+        ],
+        "0": [
+            "eus-0"
+        ],
+        "1": [
+            "eus-1"
+        ],
+        "2": [
+            "eus-2"
+        ]
+    },
+    "vsoDr": {
+        "0": [
+            "eus2-0"
+        ],
+        "1": [
+            "eus-1"
+        ],
+        "2": [
+            "eus2-1"
+        ],
+        "3": [
+            "eus2-2"
+        ]  
+    },
+    "mms": {
+        "0": [
+            "ghado-eus2c-1",
+            "ghub-eus2-0",
+            "ghado-wcus-0"
+        ],
+      "1": [
+        "ghado-cus-1",
+        "ghado-cus-2",
+        "ghub-cus-2"
+      ],
+        "2": [
+            "ghado-cfr-1",
+            "ghado-eus2-1",
+            "ghub-eus2-2"
+        ],
+      "3": [
+        "ghado-eus-1",
+        "ghado-eus2-2",
+        "ghado-neu-1",
+        "ghado-weu-1",
+        "ghado-wus-1",
+        "ghado-wus2-1",
+        "ghub-cus-1",
+        "ghub-eus-1",
+        "ghub-eus-2",
+        "ghub-eus2-1"
+      ]},
+    "mmsado": {
+        "0": [
+            "pf-eus2c-1",
+            "wcus-0"
+        ],
+        "1": [
+            "cca-1",
+            "sbr-1",
+            "wus2-1"
+        ],
+        "2": [
+            "eus2-1"
+        ],
+        "3": [
+            "cus-1",
+            "ea-1",
+            "eau-1",
+            "sin-1",
+            "uks-1",
+            "weu-1",
+            "weu-2"
+        ] 
+    }
+}

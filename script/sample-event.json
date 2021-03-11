@@ -1,0 +1,8 @@
+{
+  "inputs": {
+    "minRing": 0,
+    "maxRing": 3,
+    "scaleUnit": "",
+    "build": "123"
+  }
+}
