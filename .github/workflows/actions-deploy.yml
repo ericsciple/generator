@@ -17,6 +17,7 @@ on:
         required: true
 jobs:
   generator:
+    name: "Generate graph"
     runs-on: [ self-hosted ]
     generates: graph.yml
     steps:
