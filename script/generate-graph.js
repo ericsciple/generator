@@ -168,3 +168,7 @@ function getDeployNeeds(ringNumber, rings, minRing) {
 }
 
 run()
+    .catch(err => {
+        console.error(err)
+        process.exitCode = 1
+    })
