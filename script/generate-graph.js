@@ -102,6 +102,13 @@ async function run() {
                     },
                 ]
             }
+        }
+
+        for (const scaleUnit of ring) {
+            // Filter the scale unit?
+            if (scaleUnitFilter && scaleUnit !== scaleUnitFilter) {
+                continue
+            }
 
             // Health job
             graph.jobs[`health-${scaleUnit}`] = {
