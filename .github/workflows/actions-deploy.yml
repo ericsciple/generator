@@ -21,6 +21,9 @@ jobs:
     runs-on: [ self-hosted ]
     generates: graph.yml
     steps:
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '12'
       - uses: actions/checkout@v2
       - name: Generate graph
         run: ./script/generate-graph.js actions $GITHUB_EVENT_PATH > graph.yml
