@@ -2,6 +2,11 @@
 
 const fs = require('fs')
 const path = require('path')
+const exec = require('./helpers/exec')
+const JobInputs = require('./jobs/job-inputs').JobInputs
+const deployJob = require('./jobs/deploy')
+const healthJob = require('./jobs/health')
+const canaryJob = require('./jobs/canary')
 
 async function run() {
     // Args
@@ -55,6 +60,14 @@ async function run() {
         throw new Error(`Invalid build number '${buildNumber}'`)
     }
 
+    // Default job inputs
+    const defaultJobInputs = new JobInputs()
+    defaultJobInputs.rings = rings
+    defaultJobInputs.minRing = minRing
+    defaultJobInputs.maxRing = maxRing
+    defaultJobInputs.scaleUnitFilter = scaleUnitFilter
+    defaultJobInputs.buildNumber = buildNumber
+
     // Build the graph
     const graph = {
         jobs: {}
@@ -72,36 +85,12 @@ async function run() {
                 continue
             }
 
+            const jobInputs = Object.assign({}, defaultJobInputs)
+            jobInputs.ringNumber = ringNumber
+            jobInputs.scaleUnit = scaleUnit
+
             // Deploy job
-            graph.jobs[`deploy-${scaleUnit}`] = {
-                "name": `Ring ${ringNumber}, ${scaleUnit} deploy`,
-                "needs": getDeployNeeds(ringNumber, rings, minRing),
-                "runs-on": "self-hosted",
-                "env": {
-                    "RING": ringNumber,
-                    "SCALE_UNIT": scaleUnit,
-                    "BUILD_NUMBER": buildNumber,
-                    "SLACK_URL": "${{ secrets.SLACK_URL }}"
-                },
-                "steps": [
-                    {
-                        "name": "Checkout",
-                        "uses": "actions/checkout@v2"
-                    },
-                    {
-                        "name": "Download drop",
-                        "run": "./script/download-drop.sh --version $BUILD_NUMBER --path drop"
-                    },
-                    {
-                        "name": "Pre-health check",
-                        "run": "./script/check-health.sh --scale-unit $SCALE_UNIT --duration once"
-                    },
-                    {
-                        "name": "Deploy",
-                        "run": "./script/deploy.sh --scale-unit $SCALE_UNIT --path drop"
-                    },
-                ]
-            }
+            graph.jobs[deployJob.createId(jobInputs)] = deployJob.createJob(jobInputs)
         }
 
         for (const scaleUnit of ring) {
@@ -110,68 +99,32 @@ async function run() {
                 continue
             }
 
+            const jobInputs = Object.assign({}, defaultJobInputs)
+            jobInputs.ringNumber = ringNumber
+            jobInputs.scaleUnit = scaleUnit
+
             // Health job
-            graph.jobs[`health-${scaleUnit}`] = {
-                "name": `Ring ${ringNumber}, ${scaleUnit} health`,
-                "needs": `deploy-${scaleUnit}`,
-                "runs-on": "self-hosted",
-                "env": {
-                    "RING": ringNumber,
-                    "SCALE_UNIT": scaleUnit,
-                    "BUILD_NUMBER": buildNumber,
-                    "SLACK_URL": "${{ secrets.SLACK_URL }}"
-                },
-                "steps": [
-                    {
-                        "name": "Checkout",
-                        "uses": "actions/checkout@v2"
-                    },
-                    {
-                        "name": "Health",
-                        "run": "./script/check-health.sh --scale-unit $SCALE_UNIT --duration 30m"
-                    },
-                ]
-            }
+            graph.jobs[healthJob.createId(jobInputs)] = healthJob.createJob(jobInputs)
 
             // Canary tests
             if (ringNumber === 0) {
-                graph.jobs["canary"] = {
-                    "name": `Ring 0 canary`,
-                    "needs": `deploy-${scaleUnit}`,
-                    "runs-on": "self-hosted",
-                    "env": {
-                        "SLACK_URL": "${{ secrets.SLACK_URL }}"
-                    },
-                    "steps": [
-                        {
-                            "name": "Checkout",
-                            "uses": "actions/checkout@v2"
-                        },
-                        {
-                            "name": "Run canary",
-                            "run": "./script/run-canary.sh"
-                        }
-                    ]
-                }
+                graph.jobs[canaryJob.createId(jobInputs)] = canaryJob.createJob(jobInputs)
             }
         }
     }
-    console.log(JSON.stringify(graph, null, '  '))
-}
 
-function getDeployNeeds(ringNumber, rings, minRing) {
-    const needs = []
-    if (ringNumber > minRing) {
-        const prevRing = rings[ringNumber - 1]
-        for (const scaleUnit of prevRing) {
-            needs.push(`health-${scaleUnit}`)
-        }
+    const json = JSON.stringify(graph, null, '  ')
 
-        if (ringNumber === 1) {
-            needs.push(`canary`)
-        }
+    // output YAML
+    const whichYq = await exec.exec('which', ['yq'], null, true)
+    if (whichYq.exitCode === 0) {
+        const yq = await exec.exec('yq', ['eval', '--prettyPrint'], json)
+        console.log(yq.stdout)
     }
-    return needs.length == 1 ? needs[0] : needs;
+    // output JSON
+    else {
+        console.log(json)
+    }
 }
 
 run()

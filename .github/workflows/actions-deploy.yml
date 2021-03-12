@@ -23,4 +23,4 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Generate graph
-        run: ./script/generate-graph.js actions $GITHUB_EVENT_PATH | yq eval --prettyPrint > graph.yml
+        run: ./script/generate-graph.js actions $GITHUB_EVENT_PATH > graph.yml
